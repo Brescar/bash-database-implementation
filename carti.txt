@@ -1,0 +1,4 @@
+200,Pe culmile disperarii,Emil Cioran,Humanitas,37
+300,Amintiri din copilarie,Creanga,Gama,56
+400,Graurul,Valentin,Cristian,34
+199,Zenobia,Cristian Gogoasa,Polirom,28

@@ -1,0 +1,117 @@
+#!/bin/bash
+
+view() #read all the contains of the specified file
+{
+	echo " ID,  NUME CARTE,  AUTOR,  EDITURA,  PRET"
+	echo "_______________________________________________________"
+	sort carti.txt
+	#awk -F, '{print}' carti.txt-aceasta este o alta varianta acelasi rez
+}
+
+add() #add a new element and all characteristics in the data base
+{
+	repeat=y
+	while [ "$repeat" = "y" ] || [ "$repeat" = "Y" ]
+	do
+		echo -n "ID = "
+		read ID
+		echo -n "Nume carte = "
+		read b_name
+		echo -n "Autor = "
+		read a_name
+		echo -n "Editura = "
+		read e_name
+		echo -n "Pret = "
+		read price
+		echo -e "$ID,$b_name,$a_name,$e_name,$price" >> carti.txt
+		echo -n "Add more items? [yY]/[nN] "
+		read repeat
+	done
+}
+
+search() #searching by id and printing the info coresponding to the id of item
+{
+	echo -n "ID = "
+	read id
+	if grep -q "$id" carti.txt
+	then
+		grep "$id" carti.txt
+	else
+		echo "Item not found"
+	fi
+}
+
+update()
+{
+	echo -n "ID = "
+	read id
+	grep "$id" carti.txt
+	echo "Do you want to modify this element? [yY]/[nN]"
+	read confirm
+	if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]
+	then
+		if grep -q "$id" carti.txt
+		then
+			grep -v "$id" carti.txt > temp.txt
+			grep "$id" carti.txt > modify.txt
+
+			echo "what element do you want to modify? Press"
+			echo "2 - book, 3 - author, 4 - publisher, 5 - price"
+			read i
+			case $i in
+			2)
+				awk -F, '{print $2}' modify.txt > item.txt
+				oldvalue=$(<item.txt)
+			;;
+			3)
+				awk -F, '{print $3}' modify.txt > item.txt
+                                oldvalue=$(<item.txt)
+			;;
+			4)
+				awk -F, '{print $4}' modify.txt > item.txt
+                                oldvalue=$(<item.txt)
+			;;
+			5)
+				awk -F, '{print $5}' modify.txt > item.txt
+                                oldvalue=$(<item.txt)
+			;;
+			*)
+				exit
+			;;
+			esac
+			echo "Updated value : "
+			read newvalue
+
+			sed "s/$oldvalue/$newvalue/" modify.txt > desired.txt
+
+			cat temp.txt > carti.txt
+			cat desired.txt >> carti.txt
+			rm temp.txt
+			rm modify.txt
+			rm item.txt
+			rm desired.txt
+		else
+			echo "Item non-existent"
+		fi
+	fi
+}
+
+delete()
+{
+	echo -n "ID = "
+	read id
+	grep "$id" carti.txt
+	echo "You are going to delete registration $id. Proceed? [yY][nN]"
+	read confirm
+	if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]
+	then
+		grep -v "$id" carti.txt > temp.txt
+		cat temp.txt > carti.txt
+	fi
+	rm temp.txt
+}
+
+out()
+{
+	exit
+}

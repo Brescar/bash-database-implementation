@@ -1,0 +1,32 @@
+#!/bin/bash
+
+. functii
+
+echo "Alegeti o optiune : "
+
+select option in view add search update delete out
+do
+case $option in
+"view")
+	view
+;;
+"add")
+	add
+;;
+"search")
+	search
+;;
+"update")
+	update
+;;
+"delete")
+	delete
+;;
+"out")
+	out
+;;
+*)
+	out
+;;
+esac
+done
